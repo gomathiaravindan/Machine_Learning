@@ -1,0 +1,44 @@
+**Inserting libraries**
+
+from sklearn.naive_bayes import GaussianNB
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+import pandas as pd
+
+**Importing data set**
+
+tennis = pd.read_csv('play_tennis.csv')
+
+**Preparing data**
+
+tennis.drop('day', axis='columns', inplace=True) #drop column drop permanently as it not needed
+tennis.head()
+
+tennis[tennis.columns[:]] = tennis[tennis.columns[:]].apply(LabelEncoder().fit_transform)#A LabelEncoder converts a categorical data into a number ranging from 0 to n-1
+tennis.head()
+
+features = ["outlook", "temp", "humidity", "wind"]
+target = "play"
+
+features_train, features_test, target_train, target_test = train_test_split(tennis[features],tennis[target],test_size = 0.33,random_state = 54)
+
+**Creating model**
+
+
+model = GaussianNB()
+model.fit(features_train, target_train)
+
+**Performance of model-Accuracy**
+
+
+pred = model.predict(features_test)
+accuracy = accuracy_score(target_test, pred)
+print("accuracy of the model",accuracy)
+
+**Prediction**
+
+tennis.loc[3]
+
+print(model.predict([[1,2,0,1]]))
+
